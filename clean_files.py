@@ -21,7 +21,7 @@ DEFAULT_TMP_FILES_PATH = ".*(\\.tmp|~)"
 
 # Reading config
 
-def read_config() -> dict[str, str]:
+def read_config():
     """Reads config file from $HOME/.clean_files if it exist and retuns pairs of keys and values
     separated by delimeter "=", ignoring whitespaces.
 
@@ -53,7 +53,7 @@ class FileHandle:
     deleted when program exits.
     """
 
-    def __init__(self, temp_path) -> None:
+    def __init__(self, temp_path):
         """"Initialises FileHandle object with empty settings dict (saved as self.args)
         and given temporary folder path. Attaches temporary folder deletion at file exit.
 
@@ -85,7 +85,7 @@ class FileHandle:
             ,'auto' : False
         }
 
-    def args_handler(self, arg_name, arg_value) -> None:
+    def args_handler(self, arg_name, arg_value):
         """Sets given settings name to given settings value. Uses values from self.args.
         Function can create new pairs of settings key-values.
 
@@ -95,7 +95,7 @@ class FileHandle:
         """
         self.args[arg_name] = arg_value
 
-    def duplicates(self, src_filepath, dest_filepath) -> bool:
+    def duplicates(self, src_filepath, dest_filepath):
         """Replaces file in destination filepath with file if source flepath is older when files
         are the same, or with newer file otherwise. Returns True when replacement operation
         in completed successfully, else returns False.
@@ -129,7 +129,7 @@ class FileHandle:
                 print(f'Ignoring file copy - older: {src_filepath}')
                 return False
 
-    def empty(self, filepath) -> bool:
+    def empty(self, filepath):
         """Removes file if it's empty (has 0kB in size).
         Returns True if file was deleted, False otherwise.
 
@@ -145,7 +145,7 @@ class FileHandle:
             return True
         return False
 
-    def temporary(self, filepath, tmp_files_pattern) -> bool:
+    def temporary(self, filepath, tmp_files_pattern):
         """Deletes (temporary) files using given REGEX expression.
         Using '.*(\.tmp|~)' expression is recomennded.
         Returns True if file was deleted, False otherwise.
@@ -163,7 +163,7 @@ class FileHandle:
             return True
         return False
 
-    def same_name(self, src_filepath, dest_filepath) -> None:
+    def same_name(self, src_filepath, dest_filepath):
         """Creates copy of a given file in destination catalog renaming it to include index value.
         Examples:\n
         file.txt -> file(1).txt\n
@@ -188,13 +188,9 @@ class FileHandle:
         print(f'Renaming and copying file to avoid conflict: {src_filepath} -> {new_filepath}')
         shutil.copy2(src_filepath, new_filepath)
 
-
-# POPRAWIĆ DOCSTRING!!
-
-
-    def _extract_index(self, filename) -> tuple[str, str]:
+    def _extract_index(self, filename):
         """Extracts renaming index value from filename if it exits.
-        Returns string with base filename (without index it it existed) and string with index number.
+        Returns string with base filename (without index if it existed) and string with index number.
 
         Args:
             filename (str): Fil name extracted from edited filepath.
@@ -228,7 +224,7 @@ class FileHandle:
             print(f'Modifying access to file: {filepath}')
             os.chmod(filepath, access_value)
 
-    def tricky_letters(self, filepath, tricky_letters_str, substitute_letter) -> None:
+    def tricky_letters(self, filepath, tricky_letters_str, substitute_letter):
         """Modifies file name to remove characters from tricky_letters_str to character given
         in substitute_letter variable.
 
@@ -247,7 +243,7 @@ class FileHandle:
             print(f'Replacing tricky letters in file: {old_filepath} -> {new_filepath}')
             os.rename(old_filepath, new_filepath)
 
-    def start(self) -> None:
+    def start(self):
         """
         Starts main loop of the program.
         """
@@ -307,18 +303,19 @@ class FileHandle:
                         os.remove(src_filepath)
 
 
-    def clean_up_temp_catalog(self) -> None:
+    def clean_up_temp_catalog(self):
         """Removes temporary catalog, if it exists
         """
         if os.path.exists(self.temp_calatog_path):
             shutil.rmtree(self.temp_calatog_path)
+
 
 class ExceptionHandle:
     """Class to handle exceptions in this program, with buildin temporary catalog removal.
     Given temporary catalog path should exist and be used in FileHandle class above.
     Object should be created without assignin to variable.
     """
-    def __init__(self, temp_path) -> None:
+    def __init__(self, temp_path):
         """Saves path to temporary catalog and attaches sys.excepthook for code exceptions.
 
         Args:
@@ -327,7 +324,7 @@ class ExceptionHandle:
         self.temp_calatog_path = temp_path
         sys.excepthook = self.custom_exception_handler
 
-    def custom_exception_handler(self, exc_type, exc_value, exc_traceback) -> None:
+    def custom_exception_handler(self, exc_type, exc_value, exc_traceback):
         """Prints exeption and removes temporary catalog.
         """
         self.clean_up_temp_catalog(self.temp_calatog_path)
@@ -346,7 +343,7 @@ class ExceptionHandle:
             shutil.rmtree(catalog)
 
 
-def check_access(value) -> int:
+def check_access(value):
     """Check if loaded access value is correct. Returns default access value if it's invalid.
 
     Args:
@@ -364,7 +361,7 @@ def check_access(value) -> int:
             return DEFAULT_ACCESS
     return int(value)
 
-def check_letter_substitute(value) -> str:
+def check_letter_substitute(value):
     """Checks if letter substitute for tricky letters is a singlr character, or if it contains
     illegal Linux path characters. Returns default letter if loaded value is invalid.
 
