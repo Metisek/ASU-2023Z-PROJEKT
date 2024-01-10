@@ -1,0 +1,4 @@
+suggested_access = 755
+tricky_letters = :"”;*?\$#'‘|
+tricky_letters_substitute = _
+tmp_files = .*(\.tmp|~)
