@@ -259,20 +259,32 @@ class FileHandle:
                         self.temp_calatog_path, os.path.relpath(src_filepath, catalog))
 
                     if self.args.get('empty'):
-                        self.empty(dest_filepath)
+                        try:
+                            self.empty(dest_filepath)
+                        except Exception:
+                            pass
                         if self.empty(src_filepath):
                             continue
                     if self.args.get('temporary'):
-                        self.temporary(dest_filepath, self.args.get('temporary'))
+                        try:
+                            self.temporary(dest_filepath, self.args.get('temporary'))
+                        except Exception:
+                            pass
                         if self.temporary(src_filepath, self.args.get('temporary')):
                             continue
                     if self.args.get('tricky_letters') and self.args.get('tricky_letters_substitute'):
-                        self.tricky_letters(dest_filepath, self.args.get('tricky_letters'),
+                        try:
+                            self.tricky_letters(dest_filepath, self.args.get('tricky_letters'),
                                             self.args.get('tricky_letters_substitute'))
+                        except Exception:
+                            pass
                         self.tricky_letters(src_filepath, self.args.get('tricky_letters'),
                                             self.args.get('tricky_letters_substitute'))
                     if self.args.get('access'):
-                        self.strange_access(dest_filepath, self.args.get('access'))
+                        try:
+                            self.strange_access(dest_filepath, self.args.get('access'))
+                        except Exception:
+                            pass
                         self.strange_access(src_filepath, self.args.get('access'))
 
 
