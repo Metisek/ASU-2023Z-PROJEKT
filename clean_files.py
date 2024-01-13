@@ -240,15 +240,23 @@ class FileHandle:
             new_name = re.sub(a, substitute_letter, file)
             old_filepath = os.path.join(directory_path, file)
             new_filepath = os.path.join(directory_path, new_name)
-            print(f'Replacing tricky letters in file: {old_filepath} -> {new_filepath}')
-            os.rename(old_filepath, new_filepath)
+            try:
+                os.rename(old_filepath, new_filepath)
+                print(f'Replacing tricky letters in file to: {new_filepath}')
+            except Exception:
+               pass
+            return new_filepath
+        else:
+            return os.path.join(directory_path, file)
 
     def start(self):
         """
         Starts main loop of the program.
         """
         source_catalogs = self.args.get('source_catalogs')
-        dest_catalog = self.args.get('destination_catalog')
+        for idx in range(0, len(source_catalogs)):
+            source_catalogs[idx] = os.path.abspath(source_catalogs[idx])
+        dest_catalog = os.path.abspath(self.args.get('destination_catalog'))
         for catalog in source_catalogs:
             for root, _, files in os.walk(catalog):
                 for file in files:
@@ -273,13 +281,11 @@ class FileHandle:
                         if self.temporary(src_filepath, self.args.get('temporary')):
                             continue
                     if self.args.get('tricky_letters') and self.args.get('tricky_letters_substitute'):
-                        try:
-                            self.tricky_letters(dest_filepath, self.args.get('tricky_letters'),
+                        dest_filepath = self.tricky_letters(dest_filepath, self.args.get('tricky_letters'),
                                             self.args.get('tricky_letters_substitute'))
-                        except Exception:
-                            pass
-                        self.tricky_letters(src_filepath, self.args.get('tricky_letters'),
+                        src_filepath = self.tricky_letters(src_filepath, self.args.get('tricky_letters'),
                                             self.args.get('tricky_letters_substitute'))
+
                     if self.args.get('access'):
                         try:
                             self.strange_access(dest_filepath, self.args.get('access'))
